@@ -1,0 +1,295 @@
+{
+	"info": {
+		"_postman_id": "d12406bd-d559-432b-84ef-3553384663d4",
+		"name": "PruebaPayphone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14397156"
+	},
+	"item": [
+		{
+			"name": "CreateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseData = pm.response.json();",
+							"let requestData = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.equal(201);",
+							"});",
+							"",
+							"pm.test(\"Response contains id field\", function () {",
+							"    pm.expect(responseData).to.have.property(\"id\");",
+							"    pm.expect(responseData.id).to.be.a('number');",
+							"});",
+							"",
+							"pm.test(\"Response email matches request email\", function () {",
+							"    pm.expect(responseData).to.have.property(\"email\");",
+							"    pm.expect(responseData.email).to.be.eq(requestData.email);",
+							"});",
+							"",
+							"pm.collectionVariables.set(\"NewUserID\", responseData.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test - 7\",\n    \"gender\": \"male\",\n    \"email\": \"{{CreateUserEmail}}\",\n    \"status\": \"active\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/users",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseData = pm.response.json();",
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Email was updated\", function () {",
+							"    pm.expect(responseData).to.have.property(\"email\");",
+							"    pm.expect(responseData.email).to.be.eq(pm.collectionVariables.get(\"UpdateEmail\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{UpdateEmail}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/users/{{NewUserID}}",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"users",
+						"{{NewUserID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetUserDetail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"let responseData = pm.response.json();",
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Email was updated\", function () {",
+							"    pm.expect(responseData).to.have.property(\"email\");",
+							"    pm.expect(responseData.email).to.be.eq(pm.collectionVariables.get(\"UpdateEmail\"));",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseURL}}/users/{{NewUserID}}",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"users",
+						"{{NewUserID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User with Existing Email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let responseData = pm.response.json();",
+							"let requestData = JSON.parse(pm.request.body.raw);",
+							"",
+							"pm.test(\"Response status code is 422\", function () {",
+							"    pm.expect(pm.response.code).to.equal(422);",
+							"});",
+							"",
+							"pm.test(\"Response body contains property field with value email\", function () {",
+							"    pm.expect(responseData[0]).to.have.property(\"field\");",
+							"    pm.expect(responseData[0].field).to.be.eq(\"email\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test - 7\",\n    \"gender\": \"male\",\n    \"email\": \"{{UpdateEmail}}\",\n    \"status\": \"active\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/users",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{Token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "NewUserID",
+			"value": "7961200",
+			"type": "string"
+		},
+		{
+			"key": "UpdateEmail",
+			"value": "testupdate3@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "CreateUserEmail",
+			"value": "yejiviw135@hosliy.com",
+			"type": "string"
+		}
+	]
+}
